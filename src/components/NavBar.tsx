@@ -2,10 +2,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Logo } from './Logo';
-import { User, ShoppingBag, Heart, Search, Menu, X } from 'lucide-react';
+import { User, ShoppingBag, Heart, Search, Menu, X, Trash2 } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
+import { Button } from './ui/button';
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { cartItems, totalItems, subtotal, removeFromCart, updateQuantity } = useCart();
   
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -74,7 +78,7 @@ export const NavBar = () => {
                 </Link>
                 
                 {link.subCategories && (
-                  <div className="dropdown-menu absolute left-0 mt-2 w-64 bg-white shadow-lg z-10">
+                  <div className="dropdown-menu absolute left-0 mt-2 w-64 bg-white shadow-lg z-10 hidden group-hover:block">
                     <div className="p-4 grid grid-cols-1">
                       {link.subCategories.map((category) => (
                         <div key={category.name} className="mb-4">
@@ -107,15 +111,93 @@ export const NavBar = () => {
           
           {/* Action Icons */}
           <div className="flex items-center space-x-4">
-            <button aria-label="User Account" className="text-gray-800 hover:text-yummi-red transition-colors duration-300">
+            <Link to="/profile" className="text-gray-800 hover:text-yummi-red transition-colors duration-300">
               <User className="h-6 w-6" />
-            </button>
-            <button aria-label="Shopping Bag" className="text-gray-800 hover:text-yummi-red transition-colors duration-300 relative">
-              <ShoppingBag className="h-6 w-6" />
-              <span className="absolute -top-2 -right-2 bg-yummi-red text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                0
-              </span>
-            </button>
+            </Link>
+            <div className="relative">
+              <button 
+                aria-label="Shopping Bag" 
+                className="text-gray-800 hover:text-yummi-red transition-colors duration-300 relative"
+                onClick={() => setIsCartOpen(!isCartOpen)}
+              >
+                <ShoppingBag className="h-6 w-6" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-yummi-red text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+              
+              {/* Cart Dropdown */}
+              {isCartOpen && (
+                <div className="absolute right-0 mt-2 w-80 bg-white shadow-lg z-50 rounded-lg py-4 animate-fade-in">
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <h3 className="font-medium">Shopping Cart ({totalItems} items)</h3>
+                  </div>
+                  
+                  {cartItems.length === 0 ? (
+                    <div className="p-4 text-center text-gray-500">
+                      Your cart is empty
+                    </div>
+                  ) : (
+                    <>
+                      <div className="max-h-80 overflow-y-auto">
+                        {cartItems.map(item => (
+                          <div key={item.id} className="px-4 py-2 flex items-center border-b border-gray-100">
+                            <img 
+                              src={item.image} 
+                              alt={item.name} 
+                              className="w-16 h-16 object-cover rounded mr-4"
+                            />
+                            <div className="flex-1">
+                              <h4 className="font-medium">{item.name}</h4>
+                              <div className="flex items-center justify-between mt-1">
+                                <div className="flex items-center">
+                                  <button 
+                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                    className="bg-gray-100 px-2 rounded"
+                                  >
+                                    -
+                                  </button>
+                                  <span className="mx-2">{item.quantity}</span>
+                                  <button 
+                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                    className="bg-gray-100 px-2 rounded"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                                <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                              </div>
+                            </div>
+                            <button 
+                              onClick={() => removeFromCart(item.id)}
+                              className="text-gray-400 hover:text-yummi-red ml-2"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="px-4 py-3 border-t border-gray-100">
+                        <div className="flex justify-between font-medium">
+                          <span>Subtotal:</span>
+                          <span>${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div className="mt-3 space-y-2">
+                          <Link to="/cart">
+                            <Button className="w-full bg-gray-800 hover:bg-gray-700">View Cart</Button>
+                          </Link>
+                          <Link to="/checkout">
+                            <Button className="w-full bg-yummi-red hover:bg-red-700">Checkout</Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
             <button aria-label="Wishlist" className="text-gray-800 hover:text-yummi-red transition-colors duration-300">
               <Heart className="h-6 w-6" />
             </button>

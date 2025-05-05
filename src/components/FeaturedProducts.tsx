@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FoodCard } from './FoodCard';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-// Sample data for products
+// Sample data for products with Unsplash images
 const products = [
   {
     id: '1',
@@ -11,7 +11,7 @@ const products = [
     image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=2070',
     price: 12.99,
     rating: 4,
-    reviews: 1,
+    reviews: 15,
     category: 'Western Indian'
   },
   {
@@ -20,7 +20,7 @@ const products = [
     image: 'https://images.unsplash.com/photo-1533920379810-6bedac961c2a?q=80&w=2070',
     price: 10.99,
     rating: 5,
-    reviews: 1,
+    reviews: 23,
     category: 'Western Indian'
   },
   {
@@ -29,7 +29,7 @@ const products = [
     image: 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?q=80&w=2070',
     price: 14.99,
     rating: 4.5,
-    reviews: 2,
+    reviews: 18,
     category: 'Western Indian'
   },
   {
@@ -38,7 +38,7 @@ const products = [
     image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070',
     price: 13.50,
     rating: 5,
-    reviews: 1,
+    reviews: 12,
     category: 'Seafood'
   },
   {
@@ -47,7 +47,7 @@ const products = [
     image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=2068',
     price: 9.70,
     rating: 4,
-    reviews: 2,
+    reviews: 20,
     category: 'Salad'
   },
   {
@@ -56,7 +56,7 @@ const products = [
     image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=2080',
     price: 8.99,
     rating: 5,
-    reviews: 2,
+    reviews: 25,
     category: 'Breakfast'
   }
 ];

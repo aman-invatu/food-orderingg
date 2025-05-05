@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, Eye, ShoppingBag, Heart } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 
 interface FoodCardProps {
   id: string;
@@ -15,6 +16,7 @@ interface FoodCardProps {
 
 export const FoodCard = ({ id, name, image, price, rating, reviews, category }: FoodCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { addToCart } = useCart();
   
   const renderStars = () => {
     const stars = [];
@@ -27,6 +29,10 @@ export const FoodCard = ({ id, name, image, price, rating, reviews, category }: 
       );
     }
     return stars;
+  };
+
+  const handleAddToCart = () => {
+    addToCart({ id, name, image, price });
   };
   
   return (
@@ -47,10 +53,13 @@ export const FoodCard = ({ id, name, image, price, rating, reviews, category }: 
         {/* Action Buttons */}
         {isHovered && (
           <div className="absolute right-2 top-2 flex flex-col space-y-2 animate-fade-in">
-            <button className="bg-yummi-red hover:bg-red-700 text-white p-2 rounded">
+            <Link to={`/product/${id}`} className="bg-yummi-red hover:bg-red-700 text-white p-2 rounded">
               <Eye className="h-5 w-5" />
-            </button>
-            <button className="bg-yummi-red hover:bg-red-700 text-white p-2 rounded">
+            </Link>
+            <button 
+              className="bg-yummi-red hover:bg-red-700 text-white p-2 rounded"
+              onClick={handleAddToCart}
+            >
               <ShoppingBag className="h-5 w-5" />
             </button>
             <button className="bg-yummi-red hover:bg-red-700 text-white p-2 rounded">
@@ -73,8 +82,14 @@ export const FoodCard = ({ id, name, image, price, rating, reviews, category }: 
           <div className="border-t border-dashed border-gray-200 w-1/3 my-2"></div>
         </div>
         
-        <div className="text-center">
+        <div className="flex justify-between items-center">
           <span className="font-bold text-lg">${price.toFixed(2)}</span>
+          <button 
+            className="bg-yummi-red text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
